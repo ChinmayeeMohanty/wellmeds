@@ -1,4 +1,4 @@
-name: searching
+name: med-app
 
 on:
   push:

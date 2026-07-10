@@ -13,14 +13,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cm.med_app.model.Appointment;
 import com.cm.med_app.model.Medicine;
+import com.cm.med_app.model.Supplement;
 import com.cm.med_app.service.AppointmentService;
 import com.cm.med_app.service.MedicineAIService;
 import com.cm.med_app.service.MedicineService;
+import com.cm.med_app.service.SupplementService;
 
 @Controller
 public class ViewController {
 	 @Autowired
 	    private MedicineService service;
+	 @Autowired
+	 private SupplementService suppService;
 	 @Autowired
 	 private MedicineAIService medicineAIService;
 	 @Autowired
@@ -29,9 +33,10 @@ public class ViewController {
 	    @GetMapping("/")
 	    public String home(Model model) {
 	    	List<Medicine> products=service.getAll();
+	    	List<Supplement> supps=suppService.getAll();
 	    	model.addAttribute("products",products);
-	    	System.out.println(service.getAll());
-	        return "home";
+	    	model.addAttribute("supplements",supps);
+	        return "views/index";
 	    }
 
 	    @PostMapping("/recommend")

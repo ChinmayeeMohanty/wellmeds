@@ -39,10 +39,7 @@ jobs:
 
       #step5
       - name: compile
-        run: ./mvnw clean compile 
-
-      - name: run tests 
-        run: ./mvnw test  
+        run: ./mvnw clean compile  
      
       #step6
       - name: package

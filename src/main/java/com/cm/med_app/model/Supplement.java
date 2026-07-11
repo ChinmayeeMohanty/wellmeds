@@ -1,30 +1,19 @@
 package com.cm.med_app.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "supplements")
-public class Supplement{
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class Supplement extends Product {
 
-    @Id
-    private String id;
-
-    private String name;
     private String brand;
     private String category;
-    private String description;
-    private double price;
     private int stock;
-    private String imageUrl;
     private double rating;
     private boolean inStock;
-
-   
 }

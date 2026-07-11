@@ -1,7 +1,5 @@
 package com.cm.med_app.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,104 +10,134 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cm.med_app.model.Appointment;
-import com.cm.med_app.model.Medicine;
-import com.cm.med_app.model.Supplement;
+import com.cm.med_app.model.Product;
+import com.cm.med_app.repository.ProductRepository;
 import com.cm.med_app.service.AppointmentService;
-import com.cm.med_app.service.MedicineAIService;
-import com.cm.med_app.service.MedicineService;
-import com.cm.med_app.service.SupplementService;
+//import com.cm.med_app.service.MedicineAIService;
+import com.cm.med_app.service.ProductService;
 
 @Controller
 public class ViewController {
-	 @Autowired
-	    private MedicineService service;
-	 @Autowired
-	 private SupplementService suppService;
-	 @Autowired
-	 private MedicineAIService medicineAIService;
-	 @Autowired
-	 private AppointmentService appointmentService;
 
-	    @GetMapping("/")
-	    public String home(Model model) {
-	    	List<Medicine> products=service.getAll();
-	    	List<Supplement> supps=suppService.getAll();
-	    	model.addAttribute("products",products);
-	    	model.addAttribute("supplements",supps);
-	        return "views/index";
-	    }
+    @Autowired
+    private ProductService productService;
 
-	    @PostMapping("/recommend")
-	    public String recommend(@RequestParam String query,Model model) {
-	    	String response= medicineAIService.recommendMedicine(query);
-	    	model.addAttribute("response",response);
-	        return "home";
-	    }
-    
-	    @PostMapping("/add")
-	    public String addMedicine(Medicine medicine)
-	    {
-	    	service.add(medicine);
-	    	return "redirect:/";
-	    }
-	    
-	    @GetMapping("/add")
-	    public String showAddPage()
-	    {
-	    	return "add-medicine";
-	    }
-	    
-	    @GetMapping("/edit/{id}")
-	    public String showEditPage(@PathVariable String id,Model model)
-	    {
-	    	Medicine medicine=service.getById(id);
-	    	if(medicine == null) {
-	            return "redirect:/";
-	        }
-	    	model.addAttribute("medicine",medicine);
-	    	return "edit-medicine";
-	    }
-	    
-	    @PostMapping("/edit/{id}")
-	    public String editMedicine(@PathVariable String id,
-	    		Medicine medicine)
-	    {
-	    	service.update( id,medicine);
-	    	return "redirect:/";
-	    }
-//	    @GetMapping("/{id}")
-//	    public Medicine getById(@PathVariable String id) {
-//	        return service.getById(id);
-//	    }
+//    @Autowired
+//    private MedicineAIService medicineAIService;
+
+    @Autowired
+    private AppointmentService appointmentService;
+
+    @GetMapping("/")
+    public String home(Model model) {
+
+        model.addAttribute("products", productService.getMedicines());
+        model.addAttribute("supplements", productService.getSupplements());
+
+        return "views/index";
+    }
+
+//    @PostMapping("/recommend")
+//    public String recommend(@RequestParam String query, Model model) {
 //
-//	    @DeleteMapping("/{id}")
-//	    public String delete(@PathVariable String id) {
-//	        return service.delete(id);
-//	    }
-	    
-	   @GetMapping("/appointment")
-	   public String appointmentForm(Model model)
-	   {
-		   model.addAttribute("appointment",new Appointment());
-		   return "appointment-form";
-	   }
-	   
-	   @PostMapping("/appointment")
-	   public String saveAppointment(@ModelAttribute Appointment appointment,Model model)
-	   {
-		   Appointment newAppointment = appointmentService.saveAppointment(appointment);
-		   appointmentService.sendAppointmentEmail(newAppointment);
-		   model.addAttribute("ticket", newAppointment);
-		   return "ticket";
-	   }
-	   @GetMapping("/search")
-	   public String search(@RequestParam String keyword, Model model) {
+//        String response = medicineAIService.recommendMedicine(query);
+//
+//        model.addAttribute("response", response);
+//
+//        return "home";
+//    }
 
-	       model.addAttribute("products", service.search(keyword));
-	       model.addAttribute("keyword", keyword);
+    @GetMapping("/add")
+    public String showAddPage() {
+       
+        return "add-product";
+    }
 
-	       return "home";
-       }
-	   
-	   
+    @PostMapping("/add")
+    public String addProduct(@ModelAttribute Product product) {
+
+        productService.add(product);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditPage(@PathVariable String id, Model model) {
+
+        Product product = productService.getById(id);
+
+        if (product == null) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("product", product);
+
+        return "edit-product";
+    }
+
+//    @PostMapping("/edit/{id}")
+//    public String editProduct(@PathVariable String id,
+//                              @ModelAttribute Product product) {
+//
+//        productService.update(id, product);
+//
+//        return "redirect:/";
+//    }
+
+    @GetMapping("/product/{id}")
+    public String getProductDetails(@PathVariable String id, Model model) {
+
+        Product product = productService.getById(id);
+
+        if (product == null) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("product", product);
+
+        return "views/shop-single";
+    }
+
+    @GetMapping("/appointment")
+    public String appointmentForm(Model model) {
+
+        model.addAttribute("appointment", new Appointment());
+
+        return "views/contact";
+    }
+
+    @PostMapping("/appointment")
+    public String saveAppointment(@ModelAttribute Appointment appointment,
+                                  Model model) {
+
+        Appointment newAppointment = appointmentService.saveAppointment(appointment);
+
+        appointmentService.sendAppointmentEmail(newAppointment);
+
+        model.addAttribute("ticket", newAppointment);
+
+        return "ticket";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam String keyword, Model model) {
+
+        model.addAttribute("products", productService.search(keyword));
+        model.addAttribute("keyword", keyword);
+
+        return "views/index";
+    }
+    
+    @GetMapping("/thankyou")
+    public String showTy() {
+
+        return "views/thankyou";
+    }
+    
+    @GetMapping("/shop")
+    public String showShop(Model model) {
+
+    	model.addAttribute("products",productService.getAll());
+        return "views/shop";
+    }
 }

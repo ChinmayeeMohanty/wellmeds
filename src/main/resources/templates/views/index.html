@@ -71,7 +71,7 @@
                   </ul>
                 </li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a th:href="@{/appointment}">Book Appoinment</a></li>
               </ul>
             </nav>
           </div>
@@ -156,15 +156,17 @@
       <div class="row">
 		    <div class="col-sm-6 col-lg-4 mb-4 d-flex" th:each="product : ${products}">
                <div class="product-card w-100">
-		
-		            <img th:src="${product.imageUrl}"
-		                 th:alt="${product.name}">
-		
-		            <h3 class="price" th:text="${product.name}"></h3>
-		
-		            <p class="price">
-		                ₹<span th:text="${product.price}"></span>
-		            </p>
+		            <a th:href="@{/product/{id}(id=${product.id})}">
+			            <img th:src="${product.imageUrl}"
+			                 th:alt="${product.name}">
+			
+			            <h3 class="price" th:text="${product.name}"></h3>
+			
+			            <p class="price">
+			                ₹<span th:text="${product.price}"></span>
+			            </p>
+		            </a>
+		            
 		
 		        </div>
 		    </div>
@@ -194,16 +196,16 @@
                <div class="product-card w-100">
 		
 		            <span class="tag">Sale</span>
-		
-		            <img th:src="${product.imageUrl}"
-		                 th:alt="${product.name}">
-		
-		            <h3 class="price" th:text="${product.name}"></h3>
-		
-		            <p class="price">
-		                ₹<span th:text="${product.price}"></span>
-		            </p>
-		
+		            <a th:href="@{/product/{id}(id=${product.id})}">
+			            <img th:src="${product.imageUrl}"
+			                 th:alt="${product.name}">
+			
+			            <h3 class="price" th:text="${product.name}"></h3>
+			
+			            <p class="price">
+			                ₹<span th:text="${product.price}"></span>
+			            </p>
+		            </a>
 		        </div>
 		    </div>
      </div>

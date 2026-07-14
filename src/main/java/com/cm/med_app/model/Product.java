@@ -18,7 +18,7 @@ public class Product {
 
 	    private String name;
 	    private String description;
-	    private double price;
+	    private Double price;
 	    private String imageUrl;
 
 	    // MEDICINE or SUPPLEMENT

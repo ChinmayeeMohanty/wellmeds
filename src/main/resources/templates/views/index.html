@@ -295,6 +295,41 @@
         </div>
       </div>
     </div>
+    
+    <!-- ================= AI ChatBot ================= -->
+
+		<div id="chatbot">
+		
+		    <button id="chat-btn">
+		        💊
+		    </button>
+		
+		    <div id="chat-box">
+		
+		        <div class="chat-header">
+		            WellMed AI Assistant
+		            <span id="close-chat">&times;</span>
+		        </div>
+		
+		        <div id="chat-body">
+		            <div class="bot-msg">
+		                👋 Hi! Ask me about medicines, symptoms, dosage, or health supplements.
+		            </div>
+		        </div>
+		
+		        <form id="chat-form">
+		            <input
+		                    type="text"
+		                    id="query"
+		                    placeholder="Ask your question..."
+		                    required>
+		
+		            <button type="submit">Send</button>
+		        </form>
+		
+		    </div>
+		
+		</div>
 
 
     <footer class="site-footer">
@@ -347,6 +382,7 @@
     </footer>
   </div>
 
+  
   <script src="js/jquery-3.3.1.min.js"></script>
   <script src="js/jquery-ui.js"></script>
   <script src="js/popper.min.js"></script>
@@ -356,6 +392,64 @@
   <script src="js/aos.js"></script>
 
   <script src="js/main.js"></script>
+  
+  <script>
+
+const chatBtn = document.getElementById("chat-btn");
+const chatBox = document.getElementById("chat-box");
+const closeChat = document.getElementById("close-chat");
+
+chatBtn.onclick = () => {
+    chatBox.style.display = "block";
+};
+
+closeChat.onclick = () => {
+    chatBox.style.display = "none";
+};
+
+document.getElementById("chat-form").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const input=document.getElementById("query");
+    const question=input.value.trim();
+
+    if(question==="") return;
+
+    const body=document.getElementById("chat-body");
+
+    body.innerHTML +=
+        `<div class="user-msg">${question}</div>`;
+
+    input.value="";
+
+    body.scrollTop=body.scrollHeight;
+
+    fetch("/recommend",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/x-www-form-urlencoded"
+        },
+        body:"query="+encodeURIComponent(question)
+    })
+    .then(response=>response.text())
+    .then(answer=>{
+
+        body.innerHTML +=
+            `<div class="bot-msg">${answer}</div>`;
+
+        body.scrollTop=body.scrollHeight;
+    })
+    .catch(()=>{
+
+        body.innerHTML +=
+            `<div class="bot-msg">Sorry, something went wrong.</div>`;
+
+    });
+
+});
+
+</script>
 
 </body>
 

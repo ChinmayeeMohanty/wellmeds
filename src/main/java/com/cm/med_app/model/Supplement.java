@@ -13,7 +13,7 @@ public class Supplement extends Product {
 
     private String brand;
     private String category;
-    private int stock;
-    private double rating;
-    private boolean inStock;
+    private Integer stock;
+    private Double rating;
+    private Boolean inStock;
 }

@@ -118,56 +118,52 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td class="product-thumbnail">
-                      <img src="images/product_02.png" alt="Image" class="img-fluid">
-                    </td>
-                    <td class="product-name">
-                      <h2 class="h5 text-black">Ibuprofen</h2>
-                    </td>
-                    <td>$55.00</td>
-                    <td>
-                      <div class="input-group mb-3" style="max-width: 120px;">
-                        <div class="input-group-prepend">
-                          <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
-                        </div>
-                        <input type="text" class="form-control text-center" value="1" placeholder=""
-                          aria-label="Example text with button addon" aria-describedby="button-addon1">
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
-                        </div>
-                      </div>
-    
-                    </td>
-                    <td>$49.00</td>
-                    <td><a href="#" class="btn btn-primary height-auto btn-sm">X</a></td>
-                  </tr>
-    
-                  <tr>
-                    <td class="product-thumbnail">
-                      <img src="images/product_01.png" alt="Image" class="img-fluid">
-                    </td>
-                    <td class="product-name">
-                      <h2 class="h5 text-black">Bioderma</h2>
-                    </td>
-                    <td>$49.00</td>
-                    <td>
-                      <div class="input-group mb-3" style="max-width: 120px;">
-                        <div class="input-group-prepend">
-                          <button class="btn btn-outline-primary js-btn-minus" type="button">&minus;</button>
-                        </div>
-                        <input type="text" class="form-control text-center" value="1" placeholder=""
-                          aria-label="Example text with button addon" aria-describedby="button-addon1">
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
-                        </div>
-                      </div>
-    
-                    </td>
-                    <td>$49.00</td>
-                    <td><a href="#" class="btn btn-primary height-auto btn-sm">X</a></td>
-                  </tr>
-                </tbody>
+				    <tr th:each="item : ${cartitems}">
+				        <td class="product-thumbnail">
+				            <img th:src="${item.product.imageUrl}"
+				                 th:alt="${item.product.name}"
+				                 class="img-fluid"
+				                 width="100">
+				        </td>
+				
+				        <td class="product-name">
+				            <h2 class="h5 text-black"
+				                th:text="${item.product.name}"></h2>
+				        </td>
+				
+				        <td>
+				            ₹<span th:text="${item.product.price}"></span>
+				        </td>
+				
+				        <td>
+				            <div class="input-group mb-3" style="max-width:120px;">
+				                <div class="input-group-prepend">
+				                    <button class="btn btn-outline-primary" type="button">-</button>
+				                </div>
+				
+				                <input type="text"
+				                       class="form-control text-center"
+				                       th:value="${item.quantity}"
+				                       readonly>
+				
+				                <div class="input-group-append">
+				                    <button class="btn btn-outline-primary" type="button">+</button>
+				                </div>
+				            </div>
+				        </td>
+				
+				        <td>
+				            ₹<span th:text="${item.product.price * item.quantity}"></span>
+				        </td>
+				
+				        <td>
+				            <a th:href="@{/cart/remove/{id}(id=${item.product.id})}"
+				               class="btn btn-danger btn-sm">
+				                X
+				            </a>
+				        </td>
+				    </tr>
+				</tbody>
               </table>
             </div>
           </form>
@@ -204,27 +200,18 @@
                     <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
                   </div>
                 </div>
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <span class="text-black">Subtotal</span>
-                  </div>
-                  <div class="col-md-6 text-right">
-                    <strong class="text-black">$230.00</strong>
-                  </div>
-                </div>
                 <div class="row mb-5">
                   <div class="col-md-6">
                     <span class="text-black">Total</span>
                   </div>
                   <div class="col-md-6 text-right">
-                    <strong class="text-black">$230.00</strong>
+                    <strong class="text-black">₹<span th:text="${total}"></span></strong>
                   </div>
                 </div>
     
                 <div class="row">
                   <div class="col-md-12">
-                    <button class="btn btn-primary btn-lg btn-block" onclick="window.location='checkout.html'">Proceed To
-                      Checkout</button>
+                     <a th:href="@{/checkout}" class="btn btn-primary btn-block">Proceed To Checkout</a>
                   </div>
                 </div>
               </div>

@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cm.med_app.model.Appointment;
 import com.cm.med_app.model.Product;
-import com.cm.med_app.repository.ProductRepository;
 import com.cm.med_app.service.AppointmentService;
+import com.cm.med_app.service.CartService;
+import com.cm.med_app.service.MedicineAIService;
 //import com.cm.med_app.service.MedicineAIService;
 import com.cm.med_app.service.ProductService;
 
@@ -22,11 +24,14 @@ public class ViewController {
     @Autowired
     private ProductService productService;
 
-//    @Autowired
-//    private MedicineAIService medicineAIService;
+     @Autowired
+     private MedicineAIService medicineAIService;
 
     @Autowired
     private AppointmentService appointmentService;
+    
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -37,15 +42,12 @@ public class ViewController {
         return "views/index";
     }
 
-//    @PostMapping("/recommend")
-//    public String recommend(@RequestParam String query, Model model) {
-//
-//        String response = medicineAIService.recommendMedicine(query);
-//
-//        model.addAttribute("response", response);
-//
-//        return "home";
-//    }
+    @PostMapping("/recommend")
+    @ResponseBody
+    public String recommend(@RequestParam String query) {
+
+        return medicineAIService.recommendMedicine(query);
+    }
 
     @GetMapping("/add")
     public String showAddPage() {
@@ -140,4 +142,34 @@ public class ViewController {
     	model.addAttribute("products",productService.getAll());
         return "views/shop";
     }
+    
+    @GetMapping("/cart")
+    public String cartPage(Model model) {
+        model.addAttribute("cartitems", cartService.getCart());
+        model.addAttribute("total", cartService.getCartTotal());
+        return "views/cart";
+    }
+    
+    @PostMapping("/cart/add/{id}")
+    public String addToCart(@PathVariable String id,
+                            @RequestParam(defaultValue = "1") int quantity) {
+
+        cartService.addToCart(id, quantity);
+        return "redirect:/cart";
+    }
+    
+    @GetMapping("/cart/remove/{id}")
+    public String removeFromCart(@PathVariable String id) {
+        cartService.removeFromCart(id);
+        return "redirect:/cart";
+    }
+    
+    @GetMapping("/checkout")
+    public String checkout(Model model)
+    {
+    	 model.addAttribute("cartitems", cartService.getCart());
+         model.addAttribute("total", cartService.getCartTotal());
+    	return "views/checkout";
+    }
+    
 }

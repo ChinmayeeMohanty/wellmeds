@@ -43,8 +43,13 @@ public class PaymentController {
 	{
 		try
 		{
-			String signature=razorpayOrderId+"|"+razorpayPaymentId;
-			boolean isValid=Utils.verifySignature(razorpaySignature, signature,KEY_SECRET);	
+			String payload = razorpayOrderId + "|" + razorpayPaymentId;
+
+			boolean isValid = Utils.verifySignature(
+			        payload,
+			        razorpaySignature,
+			        KEY_SECRET
+			);
 			if(isValid)
 			{
 				return ResponseEntity.ok("Payment Verified");

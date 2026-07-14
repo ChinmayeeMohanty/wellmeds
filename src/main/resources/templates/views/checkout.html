@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 
-<!-- Mirrored from themewagon.github.io/pharma/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Jun 2026 16:47:06 GMT -->
+<!-- Mirrored from themewagon.github.io/WellMed/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Jun 2026 16:47:06 GMT -->
 <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 <head>
-  <title>Pharma &mdash; Colorlib Template</title>
+  <title>WellMed</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -22,6 +22,11 @@
   <link rel="stylesheet" href="css/aos.css">
 
   <link rel="stylesheet" href="css/style.css">
+  
+  <script src="https://checkout.razorpay.com/v1/checkout.js">
+  
+  
+  </script>
 
 </head>
 
@@ -45,7 +50,7 @@
         <div class="d-flex align-items-center justify-content-between">
           <div class="logo">
             <div class="site-logo">
-              <a href="index-2.html" class="js-logo-clone">Pharma</a>
+              <a href="index-2.html" class="js-logo-clone">WellMed</a>
             </div>
           </div>
           <div class="main-nav d-none d-lg-block">
@@ -319,21 +324,14 @@
                       <th>Total</th>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Bioderma <strong class="mx-2">x</strong> 1</td>
-                        <td>$55.00</td>
+                      <tr th:each="item:${cartitems}">
+                        <td th:text="${item.product.name}"><span></span> <strong class="mx-2">x</strong> 1</td>
+                        <td th:text="${item.product.price}"><span></span> </td>
                       </tr>
-                      <tr>
-                        <td>Ibuprofeen <strong class="mx-2">x</strong> 1</td>
-                        <td>$45.00</td>
-                      </tr>
-                      <tr>
-                        <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
-                        <td class="text-black">$350.00</td>
-                      </tr>
+                      
                       <tr>
                         <td class="text-black font-weight-bold"><strong>Order Total</strong></td>
-                        <td class="text-black font-weight-bold"><strong>$350.00</strong></td>
+                        <td  class="text-black font-weight-bold"><strong><span id="orderamount" th:text="${total}"></span></strong></td>
                       </tr>
                     </tbody>
                   </table>
@@ -375,8 +373,9 @@
                   </div>
     
                   <div class="form-group">
-                    <button class="btn btn-primary btn-lg btn-block" onclick="window.location='thankyou.html'">Place
-                      Order</button>
+                    <button type="button" id="paybutton" onclick="paynow()" class="btn btn-primary btn-lg btn-block">
+                     Pay Now
+                  </button> 
                   </div>
     
                 </div>
@@ -396,7 +395,7 @@
           <div class="col-lg-6 mb-5 mb-lg-0">
             <a href="#" class="banner-1 h-100 d-flex" style="background-image: url('images/bg_1.jpg');">
               <div class="banner-1-inner align-self-center">
-                <h2>Pharma Products</h2>
+                <h2>WellMed Products</h2>
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae ex ad minus rem odio voluptatem.
                 </p>
               </div>
@@ -477,9 +476,77 @@
   <script src="js/aos.js"></script>
 
   <script src="js/main.js"></script>
+  
+  <script>
+async function paynow() {
+
+    let amount = document.getElementById("orderamount").innerText;
+
+    const response = await fetch("/create-order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            amount: amount
+        })
+    });
+
+    const order = await response.json();
+
+    const keyResponse = await fetch("/get-key");
+    const key = await keyResponse.text();
+
+    const options = {
+        key: key,
+        amount: order.amount,
+        currency: order.currency,
+        name: "med-app",
+        description: "Medicine Order",
+        order_id: order.id,
+
+        handler: async function (payment) {
+
+            const verify = await fetch("/payment-callback", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    razorpay_order_id: payment.razorpay_order_id,
+                    razorpay_payment_id: payment.razorpay_payment_id,
+                    razorpay_signature: payment.razorpay_signature
+                })
+            });
+
+            const result = await verify.text();
+
+            if (result === "Payment Verified") {
+                alert(result);
+                window.location.href = "/thankyou";
+            } else {
+                alert(result);
+            }
+        },
+
+        theme: {
+            color: "#3399cc"
+        },
+
+        prefill: {
+            name: "customer",
+            email: "",
+            contact: ""
+        }
+    };
+
+    var razorpay = new Razorpay(options);
+    razorpay.open();
+}
+</script>
 
 </body>
 
 
-<!-- Mirrored from themewagon.github.io/pharma/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Jun 2026 16:47:06 GMT -->
+<!-- Mirrored from themewagon.github.io/WellMed/checkout.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 25 Jun 2026 16:47:06 GMT -->
 </html>

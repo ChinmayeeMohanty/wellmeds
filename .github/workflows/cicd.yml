@@ -26,7 +26,7 @@ jobs:
 
       # Step 3: Build the project
       - name: Build Application
-        run: ./mvnw clean package -DskipTests
+        run:  mvn clean package -DskipTests
 
       # Step 4: Copy JAR to EC2
       - name: Copy JAR to EC2

@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="css/aos.css">
 
   <link rel="stylesheet" href="css/style.css">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
@@ -44,13 +46,13 @@
         <div class="d-flex align-items-center justify-content-between">
           <div class="logo">
             <div class="site-logo">
-              <a href="index-2.html" class="js-logo-clone">WellMed</a>
+              <a th:href="@{/}" class="js-logo-clone">WellMed</a>
             </div>
           </div>
           <div class="main-nav d-none d-lg-block">
             <nav class="site-navigation text-right text-md-center" role="navigation">
               <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li class="active"><a href="index-2.html">Home</a></li>
+                <li class="active"><a th:href="@{/}">Home</a></li>
                 <li><a href="shop.html">Store</a></li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -296,41 +298,50 @@
       </div>
     </div>
     
-    <!-- ================= AI ChatBot ================= -->
-
-		<div id="chatbot">
-		
-		    <button id="chat-btn">
-		        💊
-		    </button>
-		
-		    <div id="chat-box">
-		
-		        <div class="chat-header">
-		            WellMed AI Assistant
-		            <span id="close-chat">&times;</span>
-		        </div>
-		
-		        <div id="chat-body">
-		            <div class="bot-msg">
-		                👋 Hi! Ask me about medicines, symptoms, dosage, or health supplements.
-		            </div>
-		        </div>
-		
-		        <form id="chat-form">
-		            <input
-		                    type="text"
-		                    id="query"
-		                    placeholder="Ask your question..."
-		                    required>
-		
-		            <button type="submit">Send</button>
-		        </form>
-		
-		    </div>
-		
-		</div>
-
+    <!-- Floating Chatbot -->
+	<div id="chatbot">
+	    <!-- Chat Button -->
+	    <button id="chat-btn" title="Chat with us">
+	        <i class="fas fa-comments"></i>
+	    </button>
+	
+	    <!-- Chat Box -->
+	    <div id="chat-box">
+	        <!-- Chat Header -->
+	        <div class="chat-header">
+	            <div class="chat-header-title">
+	                <i class="fas fa-heartbeat"></i>
+	                <span>Medical Assistant</span>
+	            </div>
+	            <span id="close-chat" title="Close chat">
+	                <i class="fas fa-times"></i>
+	            </span>
+	        </div>
+	
+	        <!-- Chat Body -->
+	        <div id="chat-body">
+	            <div class="bot-msg">
+	                <div class="bot-msg-content">
+	                    👋 Hello! I'm your Medical Assistant. How can I help you today?
+	                </div>
+	            </div>
+	        </div>
+	
+	        <!-- Chat Form -->
+	        <form id="chat-form">
+	            <input 
+	                type="text" 
+	                id="query" 
+	                placeholder="Ask about medicines, symptoms..." 
+	                autocomplete="off"
+	                required
+	            />
+	            <button type="submit" title="Send message">
+	                <i class="fas fa-paper-plane"></i>
+	            </button>
+	        </form>
+	    </div>
+	</div>
 
     <footer class="site-footer">
       <div class="container">
@@ -393,64 +404,129 @@
 
   <script src="js/main.js"></script>
   
-  <script>
-
+ <script>
 const chatBtn = document.getElementById("chat-btn");
 const chatBox = document.getElementById("chat-box");
 const closeChat = document.getElementById("close-chat");
+const chatForm = document.getElementById("chat-form");
+const queryInput = document.getElementById("query");
+const chatBody = document.getElementById("chat-body");
 
-chatBtn.onclick = () => {
-    chatBox.style.display = "block";
-};
+// Open / Close Chat
+chatBtn.addEventListener("click", () => {
+    chatBox.classList.toggle("active");
+    chatBtn.classList.toggle("active");
 
-closeChat.onclick = () => {
-    chatBox.style.display = "none";
-};
+    if (chatBox.classList.contains("active")) {
+        queryInput.focus();
+    }
+});
 
-document.getElementById("chat-form").addEventListener("submit", function(e){
+closeChat.addEventListener("click", () => {
+    chatBox.classList.remove("active");
+    chatBtn.classList.remove("active");
+});
+
+// Function to add messages
+function addMessage(message, sender) {
+
+    const messageDiv = document.createElement("div");
+    messageDiv.className = sender === "user" ? "user-msg" : "bot-msg";
+
+    const messageContent = document.createElement("div");
+    messageContent.className =
+        sender === "user"
+            ? "user-msg-content"
+            : "bot-msg-content";
+
+    messageContent.textContent = message;
+
+    messageDiv.appendChild(messageContent);
+    chatBody.appendChild(messageDiv);
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Typing indicator
+function showTypingIndicator() {
+
+    const typing = document.createElement("div");
+    typing.className = "bot-msg";
+    typing.id = "typing-indicator-container";
+
+    typing.innerHTML = `
+        <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+
+    chatBody.appendChild(typing);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function removeTypingIndicator() {
+
+    const typing = document.getElementById("typing-indicator-container");
+
+    if (typing) {
+        typing.remove();
+    }
+}
+
+// Send Message
+chatForm.addEventListener("submit", function (e) {
 
     e.preventDefault();
 
-    const input=document.getElementById("query");
-    const question=input.value.trim();
+    const question = queryInput.value.trim();
 
-    if(question==="") return;
+    if (question === "") return;
 
-    const body=document.getElementById("chat-body");
+    addMessage(question, "user");
 
-    body.innerHTML +=
-        `<div class="user-msg">${question}</div>`;
+    queryInput.value = "";
 
-    input.value="";
+    showTypingIndicator();
 
-    body.scrollTop=body.scrollHeight;
-
-    fetch("/recommend",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/x-www-form-urlencoded"
+    fetch("/recommend", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
         },
-        body:"query="+encodeURIComponent(question)
+        body: "query=" + encodeURIComponent(question)
     })
-    .then(response=>response.text())
-    .then(answer=>{
+    .then(response => response.text())
+    .then(answer => {
 
-        body.innerHTML +=
-            `<div class="bot-msg">${answer}</div>`;
+        removeTypingIndicator();
 
-        body.scrollTop=body.scrollHeight;
+        addMessage(answer, "bot");
+
     })
-    .catch(()=>{
+    .catch(error => {
 
-        body.innerHTML +=
-            `<div class="bot-msg">Sorry, something went wrong.</div>`;
+        console.error(error);
 
+        removeTypingIndicator();
+
+        addMessage("Sorry, something went wrong.", "bot");
     });
 
 });
 
-</script>
+// Close chat using ESC
+document.addEventListener("keydown", function (e) {
 
+    if (e.key === "Escape" && chatBox.classList.contains("active")) {
+
+        chatBox.classList.remove("active");
+        chatBtn.classList.remove("active");
+    }
+
+});
+</script>
 </body>
 
 

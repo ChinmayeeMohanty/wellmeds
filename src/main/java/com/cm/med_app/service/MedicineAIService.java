@@ -26,17 +26,42 @@ public class MedicineAIService {
    {
 	   List<Product> medicines= productRepository.findAll();
 	  String medicineData=medicines.stream().map(m->m.getName()+" ₹"+m.getPrice()).collect(Collectors.joining("\n"));
-	   String prompt="""
-	   		you are a smart pharmacy assistant.
-	   		user requirement:
-	   		%s
-	   		available medicines:
-	   		%s
-	   		task:
-	   		recommend the best medicines based on price and suitability.
-	   		keep answers short and useful.
-	   		Give me funny jokes related to %s
-	   		""".formatted(query,medicineData,query);
+	  String prompt = """
+			  You are a smart pharmacy assistant.
+
+			  User Query:
+			  %s
+
+			  Available Medicines:
+			  %s
+
+			  Your task:
+
+			  - Understand the user's symptoms or requirement.
+			  - Recommend ONLY ONE best medicine from the available medicines.
+			  - If no suitable medicine is available, politely say so.
+
+			  Response Format:
+
+			  Medicine Recommendation
+
+			  Medicine Name: <medicine name>
+
+			  Price: ₹<price>
+
+			  Reason: <Explain in one or two short sentences why this medicine is suitable.>
+
+
+			  Rules:
+
+			  - The medicine recommendation must always come first.
+			  - Use only the medicines from the available medicines list.
+			  - Do not invent medicines or prices.
+			  - Keep the response concise.
+			  - Do not use Markdown.
+			  - Do not use #, *, **, bullet points, or numbering.
+			  - Return plain text only.
+			  """.formatted(query, medicineData);
 	   return chatClient.prompt(prompt).call().content() ;
    }
    

@@ -15,12 +15,14 @@
 
         .actions {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 20px; 
+            
         }
 
         .actions a {
             margin: 0 10px;
             text-decoration: none;
+            
         }
 
         .product-container {
@@ -73,6 +75,7 @@
     <a th:href="@{/appointment}"> Book Appointment</a>
 </div>
 <div>
+
    <form th:action="@{/search}" method="get">
 	   <input type="text" name="keyword" placeholder="Search Medicine">
 	   <button type="submit">Search</button>

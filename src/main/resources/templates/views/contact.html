@@ -51,30 +51,30 @@
           <div class="main-nav d-none d-lg-block">
             <nav class="site-navigation text-right text-md-center" role="navigation">
               <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li><a href="index-2.html">Home</a></li>
-                <li><a href="shop.html">Store</a></li>
+                <li class="active"><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/shop}">Store</a></li>
                 <li class="has-children">
-                  <a href="#">Dropdown</a>
+                  <a th:href="@{/shop}">Products</a>
                   <ul class="dropdown">
-                    <li><a href="#">Supplements</a></li>
+                    <li><a th:href="@{/shop}">Supplements</a></li>
                     <li class="has-children">
-                      <a href="#">Vitamins</a>
+                      <a th:href="@{/shop}">Vitamins</a>
                       <ul class="dropdown">
-                        <li><a href="#">Supplements</a></li>
-                        <li><a href="#">Vitamins</a></li>
-                        <li><a href="#">Diet &amp; Nutrition</a></li>
-                        <li><a href="#">Tea &amp; Coffee</a></li>
+                        <li><a th:href="@{/shop}">Supplements</a></li>
+                        <li><a th:href="@{/shop}">Vitamins</a></li>
+                        <li><a th:href="@{/shop}">Diet &amp; Nutrition</a></li>
+                        <li><a th:href="@{/shop}">Tea &amp; Coffee</a></li>
                       </ul>
                     </li>
-                    <li><a href="#">Diet &amp; Nutrition</a></li>
-                    <li><a href="#">Tea &amp; Coffee</a></li>
-
+                    <li><a th:href="@{/shop}">Diet &amp; Nutrition</a></li>
+                    <li><a th:href="@{/shop}">Tea &amp; Coffee</a></li>
+                    
                   </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
-                <li class="active"><a href="contact.html">Contact</a></li>
+                <li><a th:href="@{/appointment}">Book Appoinment</a></li>
               </ul>
             </nav>
+           
           </div>
           <div class="icons">
             <a href="#" class="icons-btn d-inline-block js-search-open"><span class="icon-search"></span></a>

@@ -286,6 +286,9 @@ docker compose up --build
 - Thymeleaf
 - Spring AI
 - Spring Mail
+- Spring Security Authentication & Authorization
+- Role-Based Access Control
+- Admin Dashboard
 - Exception Handling
 - Layered Architecture
 
@@ -308,13 +311,10 @@ docker compose up --build
 
 # 🚀 Future Enhancements
 
-- Spring Security Authentication & Authorization
 - JWT Authentication
-- Role-Based Access Control
 - Order History
 - Inventory Management
 - Product Reviews & Ratings
-- Admin Dashboard
 - OTP Verification
 - Doctor Availability Scheduling
 - Payment History

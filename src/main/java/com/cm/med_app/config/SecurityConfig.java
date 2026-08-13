@@ -28,11 +28,12 @@ public class SecurityConfig {
    {
 	   http.csrf(csrf->csrf.disable()).authorizeHttpRequests(auth->auth
 			   .requestMatchers("/","/shop","/product/**","/apppointment","/thankyou","/login","/css/**","/js/**","/images/**").permitAll()
-			   .requestMatchers("/recommend").hasAnyRole("PATIENT","PHARMASIST","ADMIN")
-			   .requestMatchers("/add").hasAnyRole("PHARMASIST","ADMIN")
-			   .requestMatchers("/checkout").hasAnyRole("PHARMASIST","ADMIN","PATIENT")
-			   .requestMatchers("/cart/**").hasAnyRole("PHARMASIST","ADMIN","PATIENT")
+			   .requestMatchers("/recommend").hasAnyRole("PATIENT","PHARMACIST","ADMIN")
+			   .requestMatchers("/add").hasAnyRole("PHARMACIST","ADMIN")
+			   .requestMatchers("/checkout").hasAnyRole("PHARMACIST","ADMIN","PATIENT")
+			   .requestMatchers("/cart/**").hasAnyRole("PHARMACIST","ADMIN","PATIENT")
 			   .requestMatchers("/admin/**").hasRole("ADMIN")
+			   .requestMatchers("/pharmacy/**").hasRole("PHARMACIST")
 			   .anyRequest()
 			   .authenticated()
 			   )

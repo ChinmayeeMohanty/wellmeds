@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+  <title>Appointment Ticket</title>
+  </head>
+  <body>
+   <h1>Appointment Confirm</h1>
+   <hr>
+  
+    <p>Name : <span th:text="${ticket.patientName}"></span></p>
+    <p>Email : <span th:text="${ticket.patientEmail}"></span></p>
+    <p>Age : <span th:text="${ticket.age}"></span></p>
+	<p>Gender : <span th:text="${ticket.gender}"></span></p>
+	<p>Doctor : <span th:text="${ticket.doctorName}"></span></p>
+	<p>Date : <span th:text="${ticket.appointmentDate}"></span></p>
+	<p>Symptoms : <span th:text="${ticket.symptoms}"></span></p>
+  </body>
+</html>

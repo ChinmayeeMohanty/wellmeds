@@ -1,17 +1,448 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-  <title>Appointment Ticket</title>
-  </head>
-  <body>
-   <h1>Appointment Confirm</h1>
-   <hr>
-  
-    <p>Name : <span th:text="${ticket.patientName}"></span></p>
-    <p>Email : <span th:text="${ticket.patientEmail}"></span></p>
-    <p>Age : <span th:text="${ticket.age}"></span></p>
-	<p>Gender : <span th:text="${ticket.gender}"></span></p>
-	<p>Doctor : <span th:text="${ticket.doctorName}"></span></p>
-	<p>Date : <span th:text="${ticket.appointmentDate}"></span></p>
-	<p>Symptoms : <span th:text="${ticket.symptoms}"></span></p>
-  </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointment Ticket</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            line-height: 1.7;
+            color: #8c92a0;
+            font-weight: 300;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            min-height: 100vh;
+            padding: 50px 20px;
+        }
+
+        .ticket-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .ticket {
+            background: #fff;
+            border: 1px solid #edf0f5;
+            box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top cyan line - matches base CSS */
+        .ticket::before {
+            content: "";
+            display: block;
+            height: 5px;
+            background: #51eaea;
+        }
+
+        .ticket-header {
+            padding: 30px 35px;
+            border-bottom: 1px solid #edf0f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hospital-name {
+            color: #000;
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        .hospital-subtitle {
+            color: #8c92a0;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .confirmed {
+            background: #51eaea;
+            color: #000;
+            padding: 7px 15px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .ticket-title {
+            padding: 30px 35px 20px;
+        }
+
+        .ticket-title h1 {
+            color: #000;
+            font-size: 30px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .ticket-title p {
+            color: #8c92a0;
+            font-size: 14px;
+        }
+
+        .appointment-highlight {
+            margin: 0 35px 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #51eaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .appointment-highlight .label {
+            color: #8c92a0;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+        }
+
+        .appointment-highlight .value {
+            color: #000;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .details {
+            padding: 0 35px 30px;
+        }
+
+        .details-title {
+            color: #000;
+            font-size: 18px;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #edf0f5;
+            margin-bottom: 5px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 13px 0;
+            border-bottom: 1px solid #f3f3f4;
+        }
+
+        .detail-label {
+            color: #8c92a0;
+        }
+
+        .detail-value {
+            color: #000;
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        .ticket-footer {
+            border-top: 1px dashed #ccc;
+            padding: 20px 35px;
+            background: #f9f9f9;
+            text-align: center;
+        }
+
+        .ticket-footer p {
+            margin: 0;
+            font-size: 13px;
+            color: #8c92a0;
+        }
+
+        .ticket-footer strong {
+            color: #000;
+        }
+
+        .print-btn {
+            display: block;
+            width: 180px;
+            margin: 25px auto 0;
+            padding: 12px 20px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .05em;
+            cursor: pointer;
+            transition: .3s all ease-in-out;
+        }
+
+        .print-btn:hover {
+            background: #51eaea;
+            color: #000;
+            border-color: #51eaea;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 20px 10px;
+            }
+
+            .ticket-header {
+                padding: 25px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .ticket-title {
+                padding: 25px 20px 15px;
+            }
+
+            .ticket-title h1 {
+                font-size: 24px;
+            }
+
+            .appointment-highlight {
+                margin: 0 20px 25px;
+                display: block;
+            }
+
+            .appointment-highlight .value {
+                margin-top: 5px;
+            }
+
+            .details {
+                padding: 0 20px 25px;
+            }
+
+            .detail-row {
+                flex-direction: column;
+            }
+
+            .detail-value {
+                text-align: left;
+                max-width: 100%;
+                margin-top: 3px;
+            }
+
+            .ticket-footer {
+                padding: 20px;
+            }
+        }
+
+        @media print {
+
+            body {
+                background: #fff;
+                padding: 0;
+            }
+
+            .ticket {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .print-btn {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="ticket-wrapper">
+
+    <div class="ticket">
+
+        <!-- Header -->
+        <div class="ticket-header">
+
+            <div>
+                <div class="hospital-name">
+                    MED CARE
+                </div>
+
+                <div class="hospital-subtitle">
+                    Healthcare & Medical Services
+                </div>
+            </div>
+
+            <div class="confirmed">
+                Appointment Confirmed
+            </div>
+
+        </div>
+
+
+        <!-- Title -->
+        <div class="ticket-title">
+
+            <h1>Appointment Ticket</h1>
+
+            <p>
+                Please present this confirmation at the reception.
+            </p>
+
+        </div>
+
+
+        <!-- Appointment Highlight -->
+        <div class="appointment-highlight">
+
+            <div>
+                <div class="label">
+                    Appointment Date
+                </div>
+
+                <div class="value"
+                     th:text="${ticket.appointmentDate}">
+                    Appointment Date
+                </div>
+            </div>
+
+            <div>
+                <div class="label">
+                    Doctor
+                </div>
+
+                <div class="value"
+                     th:text="${ticket.doctorName}">
+                    Doctor Name
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Patient Details -->
+        <div class="details">
+
+            <div class="details-title">
+                Patient Information
+            </div>
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Patient Name
+                </span>
+
+                <span class="detail-value"
+                      th:text="${ticket.patientName}">
+                    Patient Name
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Email
+                </span>
+
+                <span class="detail-value"
+                      th:text="${ticket.patientEmail}">
+                    Patient Email
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Age
+                </span>
+
+                <span class="detail-value"
+                      th:text="${ticket.age}">
+                    Age
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Gender
+                </span>
+
+                <span class="detail-value"
+                      th:text="${ticket.gender}">
+                    Gender
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Doctor
+                </span>
+
+                <span class="detail-value"
+                      th:text="${ticket.doctorName}">
+                    Doctor
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Symptoms
+                </span>
+
+                <span class="detail-value"
+                      th:text="${ticket.symptoms}">
+                    Symptoms
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Footer -->
+        <div class="ticket-footer">
+
+            <p>
+                Please arrive <strong>15 minutes</strong>
+                before your scheduled appointment.
+            </p>
+
+            <p>
+                Thank you for choosing <strong>WELL MED</strong>.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <button class="print-btn"
+            onclick="window.print()">
+        Print Ticket
+    </button>
+
+</div>
+
+</body>
+
 </html>

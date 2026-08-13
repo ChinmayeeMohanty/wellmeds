@@ -172,4 +172,9 @@ public class ViewController {
     	return "views/checkout";
     }
     
+    @GetMapping("/login")
+    public String showLoginPage() 
+    {
+        return "login";
+    }
 }

@@ -26,20 +26,31 @@ public class AppointmentService {
 	{
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(appointment.getPatientEmail());
-		message.setSubject("APPOINTMENT CONFIRMATION - MEDAPP");
-		String body = 
-				"Dear "+ appointment.getPatientName()+ ",\n\n " + 
-		        "Your appointment has been book successfully.\n\n" +
-				"Appointment Details:\n"+
-		        "-------------------\n"+
-				"Appointment ID: "+appointment.getId()+"\n"+
-				"Doctor: "+appointment.getDoctorName()+"\n"+
-				"Date: "+appointment.getAppointmentDate()+"\n"+
-				"Symptoms: "+appointment.getSymptoms()+"\n\n"+
-				
-				"**Thank you for choosing med-app**\n\n"+
-				"\t\t\tGet well soon!";
-		
+		message.setSubject("APPOINTMENT CONFIRMATION - WELL MED");
+		String body =
+		        "Dear " + appointment.getPatientName() + ",\n\n" +
+
+		        "Your appointment has been successfully booked with Well Med.\n\n" +
+
+		        "APPOINTMENT CONFIRMATION\n" +
+		        "========================\n\n" +
+
+		        "Appointment ID : " + appointment.getId() + "\n" +
+		        "Doctor         : " + appointment.getDoctorName() + "\n" +
+		        "Date           : " + appointment.getAppointmentDate() + "\n" +
+		        "Symptoms       : " + appointment.getSymptoms() + "\n\n" +
+
+		        "Please arrive at least 15 minutes before your scheduled appointment.\n\n" +
+
+		        "If you have any questions or need to reschedule your appointment, " +
+		        "please contact our support team.\n\n" +
+
+		        "Thank you for choosing Med Care.\n" +
+		        "We wish you good health and a speedy recovery!\n\n" +
+
+		        "Regards,\n" +
+		        "Well Med Team\n" +
+		        "Healthcare & Medical Services";
 		 message.setText(body);  
 		 mailSender.send(message);
 		        

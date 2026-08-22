@@ -144,9 +144,7 @@
                     <label for="c_message" class="text-black">Doctor Name </label>
                       <select th:field="*{doctorName}" class="form-control">
 	                     <option value="">Select Doctor</option>
-	                     <option value="Dr. Chinmayee">Dr. Chinmayee</option>
-	                     <option value="Dr. Jyotirmayee">Dr. Jyotirmayee</option>
-	                     <option value="Dr. Saktimayee">Dr. Saktimayee</option>
+	                     <option th:each="doctor:${doctors}" th:value="${doctor.name}" th:text="${doctor.name + ' -- ' + doctor.specialization}"></option>
                     </select>
                   </div> 
                 </div>

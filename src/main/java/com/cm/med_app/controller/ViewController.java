@@ -14,6 +14,7 @@ import com.cm.med_app.model.Appointment;
 import com.cm.med_app.model.Product;
 import com.cm.med_app.service.AppointmentService;
 import com.cm.med_app.service.CartService;
+import com.cm.med_app.service.DoctorService;
 import com.cm.med_app.service.MedicineAIService;
 //import com.cm.med_app.service.MedicineAIService;
 import com.cm.med_app.service.ProductService;
@@ -32,6 +33,10 @@ public class ViewController {
     
     @Autowired
     private CartService cartService;
+    
+    
+    @Autowired
+    private DoctorService doctorService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -77,15 +82,6 @@ public class ViewController {
         return "edit-product";
     }
 
-//    @PostMapping("/edit/{id}")
-//    public String editProduct(@PathVariable String id,
-//                              @ModelAttribute Product product) {
-//
-//        productService.update(id, product);
-//
-//        return "redirect:/";
-//    }
-
     @GetMapping("/product/{id}")
     public String getProductDetails(@PathVariable String id, Model model) {
 
@@ -104,6 +100,7 @@ public class ViewController {
     public String appointmentForm(Model model) {
 
         model.addAttribute("appointment", new Appointment());
+        model.addAttribute("doctors", doctorService.getAvailableDoctor());
 
         return "views/contact";
     }
